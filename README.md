@@ -24,7 +24,7 @@ python manage.py migrate
 python manage.py seed     # opcjonalne: demo data
 python manage.py runserver
 ```
-Then open http://127.0.0.1:8000/ — register an account (or use the seeded users).
+Otwórz http://127.0.0.1:8000/ — zarejestruj konto (lub użyj zseedowanych użytkowników).
 
 ### Seeded konta
 
