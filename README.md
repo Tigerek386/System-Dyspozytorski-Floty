@@ -1,47 +1,48 @@
 # FleetRoute
 
-Web dispatch system for small transport companies (Django + SQLite), built from the
-FleetRoute project brief.
+Web app system dla małych firm transportowych (Django + SQLite) [FleetRoute.pdf](https://github.com/user-attachments/files/33556627/FleetRoute.pdf)
 
-## Features (MVP scope)
+## Wymagania
+git
+uv/python3.12+(uv instaluje pythona automatycznie przy tworzeniu venv)
 
-- Web interface with registration and login for two user roles: **dispatcher** and **fleet manager**
-- SQLite database with relations: vehicles, drivers, transport orders
-- Visible transport deadlines (planned start/end per order)
-- Validation of **time conflicts** (a vehicle/driver can't have two overlapping active orders)
-  and of the **max load capacity** (cargo weight vs. vehicle limit)
-- Order lifecycle statuses: new → assigned → in progress → completed / cancelled
-- Profitability calculator: `profit = price − estimated cost` per order
-- Single dashboard page to view and add vehicles, drivers and orders
-- Unit + integration tests with pytest / pytest-cov
-
-## Setup (uv)
-
+## Setup z uv (rekomendowane)
 ```bash
+git clone https://github.com/Tigerek386/System-Dyspozytrski-Floty && cd System-Dyspozytrski-Floty
 uv sync
 uv run python manage.py migrate
-uv run python manage.py seed     # optional: demo data
+uv run python manage.py seed     # opcjonalne: demo data
 uv run python manage.py runserver
 ```
-
+## Setup z base pythonem (nietestowane)
+```bash
+git clone https://github.com/Tigerek386/System-Dyspozytrski-Floty && cd System-Dyspozytrski-Floty
+python -m venv .venv
+.venv/Scripts/activate (zależne od systemu)
+pip install django pytest pytest-django pytest-cov
+python manage.py migrate
+python manage.py seed     # opcjonalne: demo data
+python manage.py runserver
+```
 Then open http://127.0.0.1:8000/ — register an account (or use the seeded users).
 
-### Seeded accounts
+### Seeded konta
 
 | username | role | password |
 |---|---|---|
+| `driver1` | driver | `password123` 
 | `dispatcher1` | dispatcher | `password123` |
 | `fleetmanager1` | fleet manager | `password123` |
 
-## Tests
+## Test
 
 ```bash
-uv run pytest
+uv run pytest | python -m pytest
 ```
 
 ## Layout
 
-- `fleetroute/` – Django project (settings, urls)
-- `accounts/` – custom user with role, registration/login/logout
-- `fleet/` – vehicles, drivers, transport orders, dashboard, seed command
-- `templates/` – base layout + auth + dashboard pages
+- `fleetroute/` – projekt Django (ustawienia, urls)
+- `accounts/` – custom użytkownicy z rolami, rejestracja/login/logout
+- `fleet/` – pojazdy, kierowcy, zlecenia transportu, dashboard, komendy seed
+- `templates/` – podstawowy układ + auth + strony dashboardu 
