@@ -1,0 +1,26 @@
+[project]
+name = "fleetroute"
+version = "0.1.0"
+description = "FleetRoute - dispatch system for small transport companies (Django + SQLite)"
+requires-python = ">=3.12"
+dependencies = [
+    "django>=5.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-django>=4.9",
+    "pytest-cov>=6",
+]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "fleetroute.settings"
+python_files = ["tests.py", "test_*.py"]
+addopts = "--cov --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["accounts", "fleet"]
+
+[tool.uv]
+package = false

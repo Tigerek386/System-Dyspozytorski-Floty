@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - FleetRoute{% endblock %}
+{% block content %}
+
+<h1>Dashboard</h1>
+
+<div class="card">
+    <h2>Transport orders</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th><th>Customer</th><th>Cargo (kg)</th><th>Start</th><th>End</th>
+                <th>Vehicle</th><th>Driver</th><th>Status</th><th>Price (PLN)</th>
+                <th>Cost (PLN)</th><th>Profit (PLN)</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+            <tr>
+                <td>{{ order.pk }}</td>
+                <td>{{ order.customer }}</td>
+                <td>{{ order.cargo_weight_kg }}</td>
+                <td>{{ order.planned_start|date:"Y-m-d H:i" }}</td>
+                <td>{{ order.planned_end|date:"Y-m-d H:i" }}</td>
+                <td>{{ order.vehicle }}</td>
+                <td>{{ order.driver }}</td>
+                <td>
+                    <form class="inline" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="form" value="status">
+                        <input type="hidden" name="order_id" value="{{ order.pk }}">
+                        <select name="status" onchange="this.form.submit()">
+                            {% for value, label in order_statuses %}
+                                <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </td>
+                <td>{{ order.price_pln }}</td>
+                <td>{{ order.estimated_cost_pln }}</td>
+                <td class="{% if order.profit_pln >= 0 %}profit-positive{% else %}profit-negative{% endif %}">
+                    {{ order.profit_pln }}
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="10">No orders yet — add one below.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h2>Vehicles</h2>
+    <table>
+        <thead>
+            <tr><th>Plate</th><th>Type</th><th>Max load (kg)</th><th>Inspection until</th><th>Insurance until</th></tr>
+        </thead>
+        <tbody>
+        {% for vehicle in vehicles %}
+            <tr>
+                <td>{{ vehicle.plate_number }}</td>
+                <td>{{ vehicle.vehicle_type }}</td>
+                <td>{{ vehicle.max_load_capacity_kg }}</td>
+                <td>{{ vehicle.technical_inspection_expiry|date:"Y-m-d" }}</td>
+                <td>{{ vehicle.insurance_expiry|date:"Y-m-d" }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5">No vehicles yet — add one below.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h2>Drivers</h2>
+    <table>
+        <thead>
+            <tr><th>Name</th><th>License</th><th>Phone</th><th>Active</th><th>Linked account</th></tr>
+        </thead>
+        <tbody>
+        {% for driver in drivers %}
+            <tr>
+                <td>{{ driver }}</td>
+                <td>{{ driver.license_category }}</td>
+                <td>{{ driver.phone|default:"-" }}</td>
+                <td>{{ driver.is_active|yesno }}</td>
+                <td>{{ driver.user.username|default:"-" }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5">No drivers yet — add one below.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h2>Link driver account</h2>
+    <p>Connect a registered driver account to a driver so they can log in and see their tasks.</p>
+    <form method="post" style="max-width: 560px;">
+        {% csrf_token %}
+        <input type="hidden" name="form" value="link_driver">
+        <div class="form-grid">
+            <label>Driver
+                <select name="driver_id">
+                    {% for driver in drivers %}
+                        <option value="{{ driver.pk }}">{{ driver }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Driver account
+                <select name="user_id">
+                    {% for account in driver_accounts %}
+                        <option value="{{ account.pk }}">{{ account.username }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+        </div>
+        <button type="submit">Link account</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Add vehicle</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="form" value="vehicle">
+        <div class="form-grid">
+            {% for field in vehicle_form %}
+                <label>{{ field.label }} {{ field }}
+                    {% if field.errors %}<span class="field-errors">{{ field.errors|join:", " }}</span>{% endif %}
+                </label>
+            {% endfor %}
+        </div>
+        <button type="submit">Add vehicle</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Add driver</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="form" value="driver">
+        <div class="form-grid">
+            {% for field in driver_form %}
+                <label>{{ field.label }} {{ field }}
+                    {% if field.errors %}<span class="field-errors">{{ field.errors|join:", " }}</span>{% endif %}
+                </label>
+            {% endfor %}
+        </div>
+        <button type="submit">Add driver</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Add transport order</h2>
+    {% if order_form.non_field_errors %}
+        <p class="field-errors">{{ order_form.non_field_errors|join:", " }}</p>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="form" value="order">
+        <div class="form-grid">
+            {% for field in order_form %}
+                <label>{{ field.label }} {{ field }}
+                    {% if field.errors %}<span class="field-errors">{{ field.errors|join:", " }}</span>{% endif %}
+                </label>
+            {% endfor %}
+        </div>
+        <button type="submit">Add order</button>
+    </form>
+</div>
+
+{% endblock %}

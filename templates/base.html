@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}FleetRoute{% endblock %}</title>
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 0; background: #f4f6f8; color: #222; }
+        header { background: #1f3a5f; color: #fff; padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        header a { color: #cfe2ff; text-decoration: none; margin-left: 1rem; }
+        main { max-width: 1100px; margin: 1.5rem auto; padding: 0 1rem; }
+        .card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.12); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+        th, td { text-align: left; padding: 0.4rem 0.6rem; border-bottom: 1px solid #e3e7eb; }
+        th { background: #eef2f6; }
+        form.inline { display: inline; }
+        input, select, textarea { padding: 0.35rem; border: 1px solid #c4ccd4; border-radius: 4px; font-size: 0.9rem; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.6rem; align-items: end; }
+        .form-grid label { display: flex; flex-direction: column; font-size: 0.85rem; gap: 0.2rem; }
+        button { background: #1f3a5f; color: #fff; border: 0; padding: 0.45rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+        .messages { list-style: none; padding: 0; margin: 0 0 1rem; }
+        .messages li { padding: 0.5rem 0.8rem; border-radius: 4px; margin-bottom: 0.4rem; font-size: 0.9rem; }
+        .messages .success { background: #d7f0dd; color: #1c5e2e; }
+        .messages .error { background: #fadbd8; color: #8a1f14; }
+        .field-errors { color: #8a1f14; font-size: 0.8rem; margin: 0.2rem 0 0; }
+        .profit-positive { color: #1c5e2e; font-weight: 600; }
+        .profit-negative { color: #8a1f14; font-weight: 600; }
+    </style>
+</head>
+<body>
+<header>
+    <strong>FleetRoute</strong>
+    <nav>
+        {% if user.is_authenticated %}
+            <span>{{ user.username }} ({{ user.get_role_display }})</span>
+            {% if user.is_driver %}
+                <a href="{% url 'driver_dashboard' %}">My tasks</a>
+            {% else %}
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+            {% endif %}
+            <form class="inline" method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" style="background:transparent;border:1px solid #cfe2ff;padding:0.2rem 0.7rem;">Log out</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Log in</a>
+            <a href="{% url 'register' %}">Register</a>
+        {% endif %}
+    </nav>
+</header>
+<main>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+</main>
+</body>
+</html>

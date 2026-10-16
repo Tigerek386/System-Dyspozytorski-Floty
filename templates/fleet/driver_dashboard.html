@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}My tasks - FleetRoute{% endblock %}
+{% block content %}
+
+<h1>My tasks</h1>
+
+{% if not profile %}
+    <div class="card">
+        <p>No driver profile is linked to your account yet.
+        Contact a dispatcher or fleet manager to link your account —
+        until then you have no tasks to show.</p>
+    </div>
+{% else %}
+
+<div class="card">
+    <h2>Upcoming / active tasks</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th><th>Customer</th><th>Description</th><th>Cargo (kg)</th>
+                <th>Start</th><th>End</th><th>Vehicle</th><th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for order in active_orders %}
+            <tr>
+                <td>{{ order.pk }}</td>
+                <td>{{ order.customer }}</td>
+                <td>{{ order.description|default:"-" }}</td>
+                <td>{{ order.cargo_weight_kg }}</td>
+                <td>{{ order.planned_start|date:"Y-m-d H:i" }}</td>
+                <td>{{ order.planned_end|date:"Y-m-d H:i" }}</td>
+                <td>{{ order.vehicle }}</td>
+                <td>
+                    <form class="inline" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="order_id" value="{{ order.pk }}">
+                        <select name="status" onchange="this.form.submit()">
+                            {% for value, label in driver_statuses %}
+                                <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="8">No active tasks right now.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h2>History</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th><th>Customer</th><th>Cargo (kg)</th>
+                <th>Start</th><th>End</th><th>Vehicle</th><th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for order in history %}
+            <tr>
+                <td>{{ order.pk }}</td>
+                <td>{{ order.customer }}</td>
+                <td>{{ order.cargo_weight_kg }}</td>
+                <td>{{ order.planned_start|date:"Y-m-d H:i" }}</td>
+                <td>{{ order.planned_end|date:"Y-m-d H:i" }}</td>
+                <td>{{ order.vehicle }}</td>
+                <td>{{ order.get_status_display }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="7">No completed tasks yet.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endif %}
+
+{% endblock %}
