@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Vehicles - FleetRoute{% endblock %}
+{% block header %}
+    {{ block.super }}
+    <a href="{% url 'vehicles' %}" style="display:flex;align-items:left;background:transparent;border:1px solid #a0b0c8;color:#007bff;padding:0.2rem 0.7rem;margin-left:0;">Pojazdy</a>
+{% endblock %}
+{% block content %}
+<h1>Vehicles</h1>
+<div class="card">
+    <h2>Vehicles</h2>
+    <table>
+        <thead>
+            <tr><th>Plate</th><th>Type</th><th>Max load (kg)</th><th>Inspection until</th><th>Insurance until</th></tr>
+        </thead>
+        <tbody>
+        {% for vehicle in vehicles %}
+            <tr>
+                <td>{{ vehicle.plate_number }}</td>
+                <td>{{ vehicle.vehicle_type }}</td>
+                <td>{{ vehicle.max_load_capacity_kg }}</td>
+                <td>{{ vehicle.technical_inspection_expiry|date:"Y-m-d" }}</td>
+                <td>{{ vehicle.insurance_expiry|date:"Y-m-d" }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5">No vehicles yet — add one below.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

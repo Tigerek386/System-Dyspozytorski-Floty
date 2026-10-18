@@ -16,6 +16,13 @@ def _staff_only(view):
         return view(request, *args, **kwargs)
     return wrapper
 
+@login_required
+@_staff_only
+def vehicles(request):
+    """Display the vehicles tab."""
+    context={"vehicles": Vehicle.objects.all()}
+    return render(request, "fleet/vehicles.html",context)
+
 
 @login_required
 @_staff_only

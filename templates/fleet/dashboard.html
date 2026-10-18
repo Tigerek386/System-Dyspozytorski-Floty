@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Dashboard - FleetRoute{% endblock %}
+{% block header %}
+    {{ block.super }}
+<a href="{% url 'vehicles' %}" style="display:flex;align-items:left;background:transparent;border:1px solid #cfe2ff;padding:0.2rem 0.7rem;margin-left:0;">Pojazdy</a>
+    {% endblock %}
 {% block content %}
+
 
 <h1>Dashboard</h1>
 

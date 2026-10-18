@@ -30,7 +30,7 @@ Otwórz http://127.0.0.1:8000/ — zarejestruj konto (lub użyj zseedowanych uż
 
 | username | role | password |
 |---|---|---|
-| `driver1` | driver | `password123` 
+| `driver1` | driver | `password123`| 
 | `dispatcher1` | dispatcher | `password123` |
 | `fleetmanager1` | fleet manager | `password123` |
 

@@ -28,8 +28,11 @@
     </style>
 </head>
 <body>
+
 <header>
+    {% block header %}
     <strong>FleetRoute</strong>
+    {% endblock %}
     <nav>
         {% if user.is_authenticated %}
             <span>{{ user.username }} ({{ user.get_role_display }})</span>
@@ -47,7 +50,9 @@
             <a href="{% url 'register' %}">Register</a>
         {% endif %}
     </nav>
+    
 </header>
+
 <main>
     {% if messages %}
         <ul class="messages">
