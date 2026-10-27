@@ -8,7 +8,7 @@ uv/python3.12+(uv instaluje pythona automatycznie przy tworzeniu venv)
 
 ## Setup z uv (rekomendowane)
 ```bash
-git clone https://github.com/Tigerek386/System-Dyspozytrski-Floty && cd System-Dyspozytrski-Floty
+git clone https://github.com/Tigerek386/System-Dyspozytorski-Floty && cd System-Dyspozytorski-Floty
 uv sync
 uv run python manage.py migrate
 uv run python manage.py seed     # opcjonalne: demo data
