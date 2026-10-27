@@ -16,7 +16,7 @@ uv run python manage.py runserver
 ```
 ## Setup z base pythonem (nietestowane)
 ```bash
-git clone https://github.com/Tigerek386/System-Dyspozytrski-Floty && cd System-Dyspozytrski-Floty
+git clone https://github.com/Tigerek386/System-Dyspozytorski-Floty && cd System-Dyspozytorski-Floty
 python -m venv .venv
 .venv/Scripts/activate (zależne od systemu)
 pip install django pytest pytest-django pytest-cov
